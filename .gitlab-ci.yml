@@ -1,0 +1,57 @@
+stages:
+  - deploy
+  - scan
+
+variables:
+  APP_DIR: "/home/iasavrandeev/web-app"  # Путь к вашей PHP-application
+  PORT: 8000
+
+# Установка зависимостей и запуск сервера
+setup_server:
+  stage: deploy
+  script:
+    - cd $APP_DIR
+    - nohup php -S localhost:$PORT > /dev/null 2>&1 &  # Запуск сервера в фоне
+    - sleep 10  # Ждем инициализации сервера
+    - curl -I http://localhost:$PORT || exit 1  # Проверяем доступность
+  artifacts:
+    paths:
+      - $APP_DIR
+  only:
+    - main
+
+# SAST: Semgrep
+semgrep_scan:
+  stage: scan
+  script:
+    - echo "Запуск Semgrep..."
+    - semgrep --config auto --json -o semgrep-report.json $APP_DIR
+  artifacts:
+    paths:
+      - semgrep-report.json
+  only:
+    - main
+
+# SCA: Trivy
+trivy_scan:
+  stage: scan
+  script:
+    - echo "Запуск Trivy..."
+    - trivy fs --severity HIGH,CRITICAL --exit-code 1 -o trivy-report.txt $APP_DIR
+  artifacts:
+    paths:
+      - trivy-report.txt
+  only:
+    - main
+
+# DAST: OWASP ZAP
+dast:
+  stage: scan
+  script:
+    - mkdir zap && chmod 777 zap
+    - docker run --network="host" -v ./zap:/zap/wrk/ --rm zaproxy/zap-stable zap-baseline.py -t http://127.0.0.1:8000 -r report.html -I
+  artifacts:
+    paths: 
+      - zap/report.html
+  only:
+    - main

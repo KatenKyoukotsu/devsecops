@@ -1,216 +1,93 @@
-# Отчёт по уязвимостям Semgrep
+# Devsecops
 
-## 1. Server-Side Request Forgery (SSRF)
-**Файл:** `admin.php` (строка 11)  
-**Описание:**  
-> Использование пользовательского ввода (`$_GET`) для формирования имени файла в `file_get_contents($file)`. Злоумышленник может указать произвольный путь или URL, что приведёт к несанкционированным запросам.
 
-**Рекомендации:**
-- Валидируйте и ограничивайте допустимые пути/домены.
-- Используйте белые списки разрешённых значений.
-- Рассмотрите замену на безопасные методы (например, загрузку файлов через контролируемые механизмы).
 
----
+## Getting started
 
-## 2. Command Injection
-**Файлы:**  
-- `function.php` (строка 4): Использование `shell_exec($command)` с неконтролируемым входом.  
-- `function.php` (строка 10): Вызов `executeCommand($userInput)` с прямым использованием пользовательских данных.  
+To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-**Описание:**  
-> Пользовательский ввод передаётся в системные команды без санации, что позволяет выполнить произвольный код.
+Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-**Рекомендации:**
-- Избегайте использования функций вроде `shell_exec`.
-- Если необходимо, экранируйте аргументы с помощью `escapeshellarg()`.
-- Используйте безопасные альтернативы (например, встроенные функции PHP для работы с файлами).
+## Add your files
 
----
+- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
+- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
 
-## 3. SQL Injection
-**Файл:** `login.php` (строка 9)  
-**Описание:**  
-> Прямая подстановка переменных `$username` и `$password` в SQL-запрос, что позволяет злоумышленнику модифицировать логику запроса.
+```
+cd existing_repo
+git remote add origin http://8b43d6b59ec0/root/devsecops.git
+git branch -M main
+git push -uf origin main
+```
 
-**Рекомендации:**
-- Перейдите на подготовленные запросы (Prepared Statements) с использованием PDO или MySQLi.
-- Внедрите ORM-библиотеки для автоматической санации данных.
+## Integrate with your tools
 
----
+- [ ] [Set up project integrations](http://8b43d6b59ec0/root/devsecops/-/settings/integrations)
 
-## 4. Plaintext HTTP Links
-**Файлы:** Множество ссылок в `report.html` (например, строки 386, 417, 448 и др.).  
-**Описание:**  
-> Использование HTTP вместо HTTPS подвергает данные риску перехвата.
+## Collaborate with your team
 
-**Рекомендации:**
-- Замените все ссылки на HTTPS-версии.
-- Настройте сервер для принудительного использования HTTPS (редирект с HTTP).
+- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
+- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
+- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
+- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
+- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
----
+## Test and Deploy
 
-## 5. Прочие замечания
-**Файлы с Zone.Identifier:**  
-> В списке сканируемых путей присутствуют файлы вида `admin.php:Zone.Identifier`. Это артефакты Windows, указывающие на происхождение файлов из ненадёжных источников (например, загрузок из интернета). Удалите их из production-окружения.
+Use the built-in continuous integration in GitLab.
 
----
+- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
+- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
+- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
+- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
+- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-## Итог
-**Инструмент:** Semgrep (Community rules)  
-**Критичность:**  
-- **ERROR:** SQL Injection, Command Injection (требуют немедленного исправления).  
-- **WARNING:** SSRF, HTTP-ссылки (рекомендуется исправить в ближайшее время).
+***
 
-# Отчёт о сканировании OWASP ZAP
+# Editing this README
 
-## Уязвимости уровня **Medium**
+When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
-### 1. Content Security Policy (CSP) Header Not Set
-- **Описание:**  
-  Отсутствует заголовок CSP, что повышает риск XSS-атак и инъекций.
-- **Затронутые URL:**  
-  `Главная страница`, `/admin.php`, `/login.php`, `/logout.php`, `/robots.txt`.
-- **Рекомендации:**  
-  Добавить заголовок `Content-Security-Policy` с ограничениями на источники скриптов, стилей и других ресурсов. Использовать генераторы CSP (например, [CSP Evaluator](https://csp-evaluator.withgoogle.com/)).
+## Suggestions for a good README
 
----
+Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-### 2. Missing Anti-clickjacking Header
-- **Описание:**  
-  Отсутствуют заголовки `X-Frame-Options` или `frame-ancestors` в CSP, что позволяет встраивать страницы в `<iframe>`.
-- **Затронутые URL:**  
-  `Главная страница`, `/admin.php`.
-- **Рекомендации:**  
-  - Установить `X-Frame-Options: DENY`.  
-  - Добавить директиву `frame-ancestors 'none'` в CSP.
+## Name
+Choose a self-explaining name for your project.
 
----
+## Description
+Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
 
-## Уязвимости уровня **Low**
+## Badges
+On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
-### 1. Cookie No HttpOnly Flag
-- **Описание:**  
-  Куки `PHPSESSID` не помечены как `HttpOnly`, что делает их доступными для JavaScript.
-- **Затронутые URL:**  
-  `/login.php`.
-- **Рекомендации:**  
-  Добавить атрибут `HttpOnly` к куки.
+## Visuals
+Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
----
+## Installation
+Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-### 2. Cookie without SameSite Attribute
-- **Описание:**  
-  Куки `PHPSESSID` не имеют атрибута `SameSite`, что может привести к CSRF-атакам.
-- **Затронутые URL:**  
-  `/login.php`.
-- **Рекомендации:**  
-  Установить `SameSite=Lax` или `SameSite=Strict`.
+## Usage
+Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
----
+## Support
+Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
 
-### 3. Insufficient Site Isolation Against Spectre Vulnerability
-- **Описание:**  
-  Отсутствуют заголовки `Cross-Origin-Resource-Policy`, `Cross-Origin-Embedder-Policy`, `Cross-Origin-Opener-Policy`.
-- **Затронутые URL:**  
-  `Главная страница`, `/admin.php`, `/login.php`.
-- **Рекомендации:**  
-  Добавить заголовки:  
-  ```http
-  Cross-Origin-Resource-Policy: same-origin
-  Cross-Origin-Embedder-Policy: require-corp
-  Cross-Origin-Opener-Policy: same-origin
-  
----
+## Roadmap
+If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-## 4. Permissions Policy Header Not Set
-- **Описание:**  
-  Отсутствует заголовок `Permissions-Policy`, ограничивающий доступ к функциям браузера (камера, микрофон и т.д.).
-- **Затронутые URL:**  
-  `Главная страница`, `/admin.php`, `/login.php`, `/logout.php`, `/robots.txt`, `/sitemap.xml`.
-- **Рекомендации:**  
-  Настроить заголовок с разрешением только необходимых функций:  
-  ```http
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
-  
----
+## Contributing
+State if you are open to contributions and what your requirements are for accepting them.
 
-## 5. Server Leaks Information via "X-Powered-By" Header  
-- **Описание:**  
-  Заголовок `X-Powered-By: PHP/8.3.6` раскрывает информацию о сервере.  
-- **Затронутые URL:**  
-  `Главная страница`, `/admin.php`, `/login.php`.  
-- **Рекомендации:**  
-  Удалить заголовок в настройках сервера (PHP или веб-сервера).  
+For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
 
----
+You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
 
-## 6. X-Content-Type-Options Header Missing  
-- **Описание:**  
-  Отсутствует заголовок `X-Content-Type-Options: nosniff`, что позволяет браузерам менять MIME-тип.  
-- **Затронутые URL:**  
-  `Главная страница`, `/admin.php`, `/login.php`.  
-- **Рекомендации:**  
-  Добавить заголовок:  
-  ```http
-  X-Content-Type-Options: nosniff
+## Authors and acknowledgment
+Show your appreciation to those who have contributed to the project.
 
----
+## License
+For open source projects, say how it is licensed.
 
-## Информационные предупреждения
-
-1. **Authentication Request Identified**  
-   - **Описание:** Обнаружена форма аутентификации на `/login.php` (POST-запрос с параметрами `username` и `password`).  
-   - **URL:** `/login.php`.
-
-2. **Non-Storable Content**  
-   - **Описание:** Ответы содержат `Cache-Control: no-store`, что полностью отключает кэширование контента.  
-   - **Затронутые URL:** Все динамические страницы.
-
-3. **Session Management Response Identified**  
-   - **Описание:** Для управления сессиями используется куки `PHPSESSID` без атрибутов безопасности.  
-   - **URL:** Все страницы с аутентификацией.
-
-4. **Storable and Cacheable Content**  
-   - **Описание:** Статические страницы (например, главная, `/logout.php`) кэшируются браузером.  
-   - **Риск:** Потенциальная утечка данных через кэш.  
-
----
-
-## Рекомендации по устранению
-
-### Для информационных предупреждений:
-- **Authentication Request:**  
-  Добавьте защиту от брутфорса (например, лимит попыток входа).  
-  Внедрите CAPTCHA для форм аутентификации.
-
-- **Non-Storable Content:**  
-  Для статических ресурсов (CSS, JS, изображения) разрешите кэширование:  
-  ```http
-  Cache-Control: public, max-age=604800
-  ```
-
-- **Session Management:**  
-  Обновите параметры куки:  
-  ```http
-  Set-Cookie: PHPSESSID=...; HttpOnly; Secure; SameSite=Strict
-  ```
-
-### Общие рекомендации:
-1. **Заголовки безопасности:**  
-   - Добавьте `X-Content-Type-Options: nosniff`.  
-   - Удалите `X-Powered-By` через настройки сервера.  
-   - Включите `Cross-Origin`-заголовки для изоляции ресурсов.
-
-2. **HTTPS:**  
-   - Настройте принудительное перенаправление с HTTP на HTTPS.  
-   - Используйте HSTS-заголовок:  
-     ```http
-     Strict-Transport-Security: max-age=31536000; includeSubDomains
-     ```
-
-3. **Кэширование:**  
-   - Для динамических страниц сохраните `Cache-Control: no-store`.  
-   - Для статики добавьте длительный TTL:  
-     ```http
-     Cache-Control: public, max-age=31536000, immutable
-     ```
+## Project status
+If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.

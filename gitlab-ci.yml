@@ -37,7 +37,8 @@ trivy_scan:
   stage: scan
   script:
     - echo "Запуск Trivy..."
-    - trivy fs --severity HIGH,CRITICAL --exit-code 1 -o trivy-report.txt $APP_DIR
+    - trivy fs --severity INFO,HIGH,CRITICAL --exit-code 1 -o trivy-report.txt $APP_DIR
+    # - trivy fs --severity WARNING,HIGH,CRITICAL --exit-code 1 -o trivy-report.txt $APP_DIR
   artifacts:
     paths:
       - trivy-report.txt
@@ -49,7 +50,7 @@ dast:
   stage: scan
   script:
     - mkdir zap && chmod 777 zap
-    - docker run --network="host" -v ./zap:/zap/wrk/ --rm zaproxy/zap-stable zap-baseline.py -t http://127.0.0.1:8000 -r report.html -I
+    - docker run --network="host" -v ./zap:/zap/wrk/ --rm zaproxy/zap-stable zap-baseline.py -t http://127.0.0.1:8000/page_1.php -r report.html -I
   artifacts:
     paths: 
       - zap/report.html

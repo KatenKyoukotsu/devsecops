@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "express": "^4.17.1",
+    "js-yaml": "^3.13.1",
+    "mime": "^1.4.1",
+    "sweetalert2": "^11.17.2",
+    "tar": "^6.1.11",
+    "tough-cookie": "^2.5.0"
+  }
+}

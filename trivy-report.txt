@@ -1,0 +1,66 @@
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://aquasecurity.github.io/trivy/v0.58/docs/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+composer.lock (composer)
+========================
+Total: 7 (HIGH: 6, CRITICAL: 1)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │         Fixed Version          │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ phpmailer/phpmailer │ CVE-2016-10045 │ CRITICAL │ fixed  │ v5.2.18           │ 5.2.20                         │ Remote Code Execution                                        │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2016-10045                   │
+│                     ├────────────────┼──────────┤        │                   ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2018-19296 │ HIGH     │        │                   │ 5.2.27, 6.0.6                  │ PHPMailer before 5.2.27 and 6.x before 6.0.6 is vulnerable   │
+│                     │                │          │        │                   │                                │ to an objec...                                               │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2018-19296                   │
+│                     ├────────────────┤          │        │                   ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2020-13625 │          │        │                   │ 6.1.6                          │ PHPMailer before 6.1.6 contains an output escaping bug when  │
+│                     │                │          │        │                   │                                │ the name o...                                                │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2020-13625                   │
+│                     ├────────────────┤          │        │                   ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2021-34551 │          │        │                   │ 6.5.0                          │ RCE affecting Windows hosts via UNC paths to translation     │
+│                     │                │          │        │                   │                                │ files                                                        │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2021-34551                   │
+│                     ├────────────────┤          │        │                   │                                ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2021-3603  │          │        │                   │                                │ PHPMailer 6.4.1 and earlier contain a vulnerability that can │
+│                     │                │          │        │                   │                                │ result in ......                                             │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2021-3603                    │
+├─────────────────────┼────────────────┤          │        ├───────────────────┼────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ twig/twig           │ CVE-2022-39261 │          │        │ v1.44.0           │ 1.44.7, 2.15.3, 3.4.3          │ Twig is a template language for PHP. Versions 1.x prior to   │
+│                     │                │          │        │                   │                                │ 1.44.7,...                                                   │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2022-39261                   │
+│                     ├────────────────┤          │        │                   ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2024-45411 │          │        │                   │ 1.44.7, 2.16.0, 3.11.0, 3.14.0 │ Twig is a template language for PHP. Under some              │
+│                     │                │          │        │                   │                                │ circumstances, the san...                                    │
+│                     │                │          │        │                   │                                │ https://avd.aquasec.com/nvd/cve-2024-45411                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+package-lock.json (npm)
+=======================
+Total: 4 (HIGH: 4, CRITICAL: 0)
+
+┌────────────────┬────────────────┬──────────┬────────┬───────────────────┬──────────────────────────────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│    Library     │ Vulnerability  │ Severity │ Status │ Installed Version │                      Fixed Version                       │                            Title                             │
+├────────────────┼────────────────┼──────────┼────────┼───────────────────┼──────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ body-parser    │ CVE-2024-45590 │ HIGH     │ fixed  │ 1.19.0            │ 1.20.3                                                   │ body-parser: Denial of Service Vulnerability in body-parser  │
+│                │                │          │        │                   │                                                          │ https://avd.aquasec.com/nvd/cve-2024-45590                   │
+├────────────────┼────────────────┤          │        ├───────────────────┼──────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ path-to-regexp │ CVE-2024-45296 │          │        │ 0.1.7             │ 1.9.0, 0.1.10, 8.0.0, 3.3.0, 6.3.0                       │ path-to-regexp: Backtracking regular expressions cause ReDoS │
+│                │                │          │        │                   │                                                          │ https://avd.aquasec.com/nvd/cve-2024-45296                   │
+│                ├────────────────┤          │        │                   ├──────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                │ CVE-2024-52798 │          │        │                   │ 0.1.12                                                   │ path-to-regexp: path-to-regexp Unpatched `path-to-regexp`    │
+│                │                │          │        │                   │                                                          │ ReDoS in 0.1.x                                               │
+│                │                │          │        │                   │                                                          │ https://avd.aquasec.com/nvd/cve-2024-52798                   │
+├────────────────┼────────────────┤          │        ├───────────────────┼──────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ qs             │ CVE-2022-24999 │          │        │ 6.7.0             │ 6.10.3, 6.9.7, 6.8.3, 6.7.3, 6.6.1, 6.5.3, 6.4.1, 6.3.3, │ express: "qs" prototype poisoning causes the hang of the     │
+│                │                │          │        │                   │ 6.2.4                                                    │ node process                                                 │
+│                │                │          │        │                   │                                                          │ https://avd.aquasec.com/nvd/cve-2022-24999                   │
+└────────────────┴────────────────┴──────────┴────────┴───────────────────┴──────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────┘

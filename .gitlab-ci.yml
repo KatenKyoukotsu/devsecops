@@ -3,7 +3,7 @@ stages:
   - scan
 
 variables:
-  APP_DIR: "/home/iasavrandeev/web-app"  # Путь к вашей PHP-application
+  APP_DIR: "/home/iasavrandeev/devsecops"  # Путь к вашей PHP-application
   PORT: 8000
 
 # Установка зависимостей и запуск сервера

@@ -1,93 +1,180 @@
-# Devsecops
+### Отчет об обнаруженных уязвимостях (SCA)
 
+---
 
+#### **1. composer.lock (PHP-зависимости)**
+**Всего уязвимостей:** 7 (CRITICAL: 1, HIGH: 6)
 
-## Getting started
+##### **phpmailer/phpmailer** (Установленная версия: v5.2.18)
+- **CVE-2016-10045** (CRITICAL):  
+  Удаленное выполнение кода (RCE).  
+  **Рекомендация:** Обновить до версии 5.2.20.
+- **CVE-2018-19296** (HIGH):  
+  Уязвимость в обработке объектов.  
+  **Рекомендация:** Обновить до 5.2.27 или 6.0.6.
+- **CVE-2020-13625** (HIGH):  
+  Ошибка экранирования вывода.  
+  **Рекомендация:** Обновить до 6.1.6.
+- **CVE-2021-34551** (HIGH):  
+  Удаленное выполнение кода через UNC-пути (Windows).  
+  **Рекомендация:** Обновить до 6.5.0.
+- **CVE-2021-3603** (HIGH):  
+  Уязвимость, приводящая к утечке данных.  
+  **Рекомендация:** Обновить до актуальной версии (6.4.2+).
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+##### **twig/twig** (Установленная версия: v1.44.0)
+- **CVE-2022-39261** (HIGH):  
+  Уязвимость в шаблонизаторе Twig.  
+  **Рекомендация:** Обновить до 1.44.7, 2.15.3 или 3.4.3.
+- **CVE-2024-45411** (HIGH):  
+  Ошибка санитизации данных.  
+  **Рекомендация:** Обновить до 1.44.7, 2.16.0, 3.11.0 или 3.14.0.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+#### **2. package-lock.json (npm-зависимости)**
+**Всего уязвимостей:** 4 (HIGH: 4)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+##### **body-parser** (Установленная версия: 1.19.0)
+- **CVE-2024-45590** (HIGH):  
+  Уязвимость к DoS-атакам.  
+  **Рекомендация:** Обновить до 1.20.3.
 
-```
-cd existing_repo
-git remote add origin http://8b43d6b59ec0/root/devsecops.git
-git branch -M main
-git push -uf origin main
-```
+##### **path-to-regexp** (Установленная версия: 0.1.7)
+- **CVE-2024-45296** (HIGH):  
+  ReDoS из-за неоптимальных регулярных выражений.  
+  **Рекомендация:** Обновить до 0.1.10, 1.9.0 или выше.
+- **CVE-2024-52798** (HIGH):  
+  Неисправленный ReDoS в версиях 0.1.x.  
+  **Рекомендация:** Перейти на версию 0.1.12 или выше.
 
-## Integrate with your tools
+##### **qs** (Установленная версия: 6.7.0)
+- **CVE-2022-24999** (HIGH):  
+  Прототипное загрязнение, приводящее к зависанию процесса.  
+  **Рекомендация:** Обновить до 6.10.3, 6.9.7 или выше.
 
-- [ ] [Set up project integrations](http://8b43d6b59ec0/root/devsecops/-/settings/integrations)
+---
 
-## Collaborate with your team
+### **Общие рекомендации **
+1. **Обновление зависимостей:**  
+   Приоритет — обновить уязвимые пакеты до рекомендованных версий. Проверьте совместимость новых версий с вашим проектом.
+2. **Тестирование:**  
+   После обновления проведите тестирование, чтобы убедиться в отсутствии конфликтов.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+---
 
-## Test and Deploy
+## **Обнаруженные уязвимости из отчёта Semgrep SAST**
+1. **Использование HTTP вместо HTTPS**:
+   - Уязвимость: Передача данных через незашифрованный HTTP-протокол.
+   - Категория: *Sensitive Data Exposure* (OWASP A03:2017) и *Cryptographic Failures* (OWASP A02:2021).
+   - CWE: CWE-319 (*Cleartext Transmission of Sensitive Information*).
+   - Рекомендация: Использовать HTTPS для шифрования передаваемых данных[1].
 
-Use the built-in continuous integration in GitLab.
+2. **Уязвимость регулярных выражений (ReDoS)**:
+   - Уязвимость: Использование динамически создаваемых регулярных выражений может привести к блокировке основного потока приложения при обработке сложных входных данных.
+   - Категория: *Denial-of-Service (DoS)*, OWASP A05:2021 и A06:2017 (*Security Misconfiguration*).
+   - CWE: CWE-1333 (*Inefficient Regular Expression Complexity*).
+   - Рекомендация:
+     - Использовать статические регулярные выражения.
+     - Если входные данные контролируются пользователем, проводить их валидацию.
+     - Рассмотреть использование библиотек для проверки регулярных выражений, например, [Recheck](https://www.npmjs.com/package/recheck)[1].
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+---
 
-***
+## **Рекомендации по устранению**
+1. Применить шифрование на уровне транспортного протокола (HTTPS) для всех ссылок и передаваемых данных.
+2. Провести аудит всех используемых регулярных выражений:
+   - Заменить динамические выражения на статические.
+   - Внедрить проверку входных данных для предотвращения атак ReDoS.
+3. Внедрить автоматизированный процесс проверки безопасности кода с использованием Semgrep на этапе CI/CD.
 
-# Editing this README
+--- 
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Отчет о результатах сканирования OWASP ZAP 
 
-## Suggestions for a good README
+---
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+#### **Общая сводка:**
+- **Высокий риск (High):** 0
+- **Средний риск (Medium):** 3
+- **Низкий риск (Low):** 5
+- **Информационные предупреждения (Informational):** 3
 
-## Name
-Choose a self-explaining name for your project.
+---
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### **Уязвимости среднего риска (Medium)**
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+#### 1. **Отсутствие Anti-CSRF токенов**
+- **Описание:** Форма на странице не содержит токенов для защиты от CSRF-атак, что позволяет злоумышленникам выполнять действия от имени пользователя без его согласия.
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php` (метод POST).
+- **Рекомендации:**
+  - Добавить уникальные токены (например, `CSRFToken`) в формы.
+  - Использовать библиотеки безопасности (например, OWASP CSRFGuard).
+  - Запретить использование метода GET для операций, изменяющих состояние.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### 2. **Отсутствие заголовка Content Security Policy (CSP)**
+- **Описание:** Не настроен заголовок CSP, что повышает риск XSS-атак и внедрения вредоносного контента.
+- **Примеры URL:** Главная страница, `page_1.php`, `robots.txt`, `sitemap.xml`.
+- **Рекомендации:**
+  - Настроить заголовок `Content-Security-Policy` на сервере.
+  - Ограничить источники загрузки скриптов, стилей и других ресурсов.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+#### 3. **Отсутствие заголовка X-Frame-Options**
+- **Описание:** Страница может быть встроена в злоумышленный сайт (clickjacking).
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php`.
+- **Рекомендации:**
+  - Добавить заголовок `X-Frame-Options: DENY` или `SAMEORIGIN`.
+  - Использовать директиву `frame-ancestors` в CSP.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+---
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### **Уязвимости низкого риска (Low)**
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+#### 1. **Раскрытие ошибок приложения**
+- **Описание:** Сервер возвращает детали ошибок (например, HTTP 500), что может помочь злоумышленникам.
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php` (метод POST).
+- **Рекомендации:**
+  - Настроить кастомные страницы ошибок.
+  - Логировать ошибки на сервере, не отображая их пользователям.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+#### 2. **Недостаточная изоляция от Spectre**
+- **Описание:** Отсутствуют заголовки для защиты от атак на основе спекулятивного исполнения (например, Spectre).
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php`.
+- **Рекомендации:**
+  - Добавить заголовки: `Cross-Origin-Resource-Policy: same-origin`, `Cross-Origin-Embedder-Policy`, `Cross-Origin-Opener-Policy`.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+#### 3. **Раскрытие версии PHP через X-Powered-By**
+- **Описание:** Заголовок `X-Powered-By` раскрывает версию PHP (`PHP/8.3.6`).
+- **Примеры URL:** `page_1.php` (GET/POST).
+- **Рекомендации:**
+  - Удалить или скрыть заголовок `X-Powered-By` в настройках сервера.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+#### 4. **Отсутствие заголовка X-Content-Type-Options**
+- **Описание:** Браузеры могут неправильно определить MIME-тип контента.
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php`.
+- **Рекомендации:**
+  - Добавить заголовок: `X-Content-Type-Options: nosniff`.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+---
 
-## License
-For open source projects, say how it is licensed.
+### **Информационные предупреждения (Informational)**
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+#### 1. **Обнаружена аутентификация**
+- **Описание:** Запрос содержит поля `username` и `password`.
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php` (метод POST).
+- **Рекомендации:** Убедиться, что аутентификация защищена HTTPS и использует современные методы (например, OAuth 2.0).
+
+#### 2. **Контент не кэшируется**
+- **Описание:** Ответы сервера (например, при ошибке 500) не кэшируются.
+- **Пример URL:** `http://127.0.0.1:8001/page_1.php` (POST).
+- **Рекомендации:** Настроить кэширование для статических ресурсов.
+
+---
+
+### **Общие рекомендации**
+1. **Обновить зависимости:** Убедиться, что PHP и другие компоненты обновлены.
+2. **Настроить HTTPS:** Защитить передачу данных с помощью SSL/TLS.
+3. **Регулярное сканирование:** Использовать инструменты вроде ZAP для периодической проверки.
+4. **Обучение команды:** Провести обучение по безопасности для разработчиков.
+
+---
